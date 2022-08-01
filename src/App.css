@@ -1,0 +1,13 @@
+.wrapper {
+    margin: 10px 10px;
+}
+
+/* remove arrows */
+.hide-arrows {
+    -moz-appearance: textfield;
+}
+.hide-arrows::-webkit-outer-spin-button,
+.hide-arrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
