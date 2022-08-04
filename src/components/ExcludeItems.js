@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { Grid } from '../AppStyled'
 
 const StyledExcludeItems = styled.div`
     display: flex;
@@ -7,51 +8,49 @@ const StyledExcludeItems = styled.div`
 `
 const StyledExcludeItem = styled.div``
 
-export default function ExcludeItems() {
-    const [numberOfItems, setNumberOfItems] = useState([])
-
-    const btnHandler = (e, action) => {
-        e.target.blur()
-        const lastItem = prevState => prevState[prevState.length - 1]
-
-        switch (action) {
-            case 'add':
-                setNumberOfItems(prevState => [...prevState, lastItem(prevState) + 1 || 0])
-                return
-            case 'remove':
-                if (numberOfItems.length > 0) {
-                    setNumberOfItems(prevState => prevState.filter(item => item !== lastItem(prevState)))
-                }
-                return
-            default:
-                return
-        }
+export default function ExcludeItems({ excludeItemsPrices, itemPriceChangeHandler, numberOfItems, addRemoveBtnHandler }) {
+    const isNumberKey = e => {
+        const charCode = e.which ? e.which : e.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) e.preventDefault()
     }
-
-    const removeItemHandler = () => {}
-
-    const ExcludeItem = () => {
-        return <StyledExcludeItem>test</StyledExcludeItem>
+    const ExcludeItem = ({ idx }) => {
+        return (
+            <StyledExcludeItem>
+                <input
+                    className={`flying-label-item__input hide-arrows`}
+                    type='number'
+                    name={`exclude-item-${idx}`}
+                    id={`exclude-item-${idx}`}
+                    value={excludeItemsPrices[idx]}
+                    onChange={e => itemPriceChangeHandler(e, idx)}
+                    onClick={e => e.target.select()}
+                    onKeyPress={isNumberKey}
+                    min='0'
+                    pattern='[0-9]+'
+                />
+                <label className='flying-label-item__label' htmlFor={`exclude-item-${idx}`}>
+                    item {idx + 1}
+                </label>
+            </StyledExcludeItem>
+        )
     }
-
-    useEffect(() => {
-        console.log('numberOfItems', numberOfItems)
-    }, [numberOfItems])
 
     return (
         <>
             <StyledExcludeItems>
                 <h3>Exclude Items</h3>
-                <button className='btn--remove btn' onClick={e => btnHandler(e, 'remove')}>
+                <button className='btn--remove btn' onClick={e => addRemoveBtnHandler(e, 'remove')}>
                     -
                 </button>
-                <button className='btn--add btn' onClick={e => btnHandler(e, 'add')}>
+                <button className='btn--add btn' onClick={e => addRemoveBtnHandler(e, 'add')}>
                     +
                 </button>
             </StyledExcludeItems>
-            {numberOfItems.map((item, idx) => (
-                <ExcludeItem key={idx} />
-            ))}
+            <Grid>
+                {numberOfItems.map((item, idx) => (
+                    <ExcludeItem key={idx} idx={idx} />
+                ))}
+            </Grid>
         </>
     )
 }
