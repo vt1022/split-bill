@@ -47,11 +47,9 @@ export default function ExcludeItems({ excludeItemsPrices, itemPriceChangeHandle
                     +
                 </Button>
             </StyledExcludeItems>
-            <Grid>
-                {numberOfItems.map((item, idx) => (
-                    <ExcludeItem key={idx} idx={idx} />
-                ))}
-            </Grid>
+            {numberOfItems.map((item, idx) => (
+                <ExcludeItem key={idx} idx={idx} />
+            ))}
         </>
     )
 }

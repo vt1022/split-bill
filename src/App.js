@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './App.css'
-import { StyledCalculate, Button, Flex, Grid } from './AppStyled'
+import { StyledCalculate, Button, Flex, Grid, Wrapper, StyledApp } from './AppStyled'
 import ExcludeItems from './components/ExcludeItems'
 import FlyingLabelInput from './components/FlyingLabelInput'
 import Total from './components/Total'
@@ -55,6 +55,8 @@ function App() {
     /*** variables for Results Calculation ***/
     const [result, setResult] = useState(null)
     const calculateResult = () => {
+        // if (subtotal === '' || totalPeople === '') return
+
         const sumOfExcludeItems = excludeItemsPrices.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
 
         const finalTip = tipUnit === '$' || tip <= 0 ? tip : subtotal * (1 + tax / 100) * (1 + tip / 100) - subtotal
@@ -69,10 +71,10 @@ function App() {
     /**********************************/
 
     return (
-        <div className='App'>
-            <div className='wrapper'>
-                <h1>Split Calculator</h1>
-                <Grid>
+        <StyledApp>
+            <h1>Split Calculator</h1>
+            <Wrapper>
+                <Grid variant='info'>
                     <FlyingLabelInput
                         value={subtotal}
                         changeHandler={e => flyingLabelChangeHandler(e, setSubtotal)}
@@ -112,7 +114,7 @@ function App() {
                         inputType='number'
                     />
                 </Grid>
-                <Grid>
+                <Grid variant='exclude-items'>
                     <ExcludeItems
                         excludeItemsPrices={excludeItemsPrices}
                         itemPriceChangeHandler={excludeItemChangeHandler}
@@ -120,13 +122,13 @@ function App() {
                         addRemoveBtnHandler={excludeItemsBtnHandler}
                     />
                 </Grid>
-                <Grid>
-                    <h3>Result</h3>
-                    <StyledCalculate onClick={calculateResult}>Calculate</StyledCalculate>
-                    <Total data={result} />
-                </Grid>
-            </div>
-        </div>
+            </Wrapper>
+            <Grid>
+                <h3>Result</h3>
+                <StyledCalculate onClick={calculateResult}>Calculate</StyledCalculate>
+                <Total data={result} />
+            </Grid>
+        </StyledApp>
     )
 }
 

@@ -2,10 +2,10 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 
 const color1 = '#fff'
-const color2 = '#000'
-const color3 = 'brown'
-const color4 = '#c0ffee'
-const color5 = 'red'
+// const color2 = '#000'
+// const color3 = 'brown'
+// const color4 = '#c0ffee'
+// const color5 = 'red'
 
 export const sharedLabelInput = css`
     border-radius: 3px;
