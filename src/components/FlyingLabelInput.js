@@ -10,7 +10,7 @@ const color1 = '#fff'
 export const sharedLabelInput = css`
     border-radius: 3px;
     font-size: 12px;
-    transition: all 0.3s ease-in;
+    transition: all 0.2s ease-in;
 `
 
 export const validLabel = css`

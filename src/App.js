@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import { StyledCalculate, Button, Flex, Grid, Wrapper, StyledApp } from './AppStyled'
 import ExcludeItems from './components/ExcludeItems'
-import FlyingLabelInput from './components/FlyingLabelInput'
+import FlyingLabelInput, { Input } from './components/FlyingLabelInput'
 import Total from './components/Total'
 
 /* 
@@ -26,29 +26,26 @@ function App() {
     /**********************************/
 
     /*** variables for ExcludeItems ***/
-    const [numberOfItems, setNumberOfItems] = useState([])
-    const [excludeItemsPrices, setExcludeItemsPrices] = useState([])
+    const [excludeItems, setExcludeItems] = useState([''])
 
-    const excludeItemsBtnHandler = (e, action) => {
+    const excludeItemsBtnHandler = (e, action, idx = 0) => {
         e.target.blur()
-        const lastItem = prevState => prevState[prevState.length - 1]
+
         switch (action) {
             case 'add':
-                setNumberOfItems(prevState => [...prevState, lastItem(prevState) + 1 || 0])
+                setExcludeItems(prevState => [...prevState, ''])
                 return
             case 'remove':
-                if (numberOfItems.length > 0) {
-                    setNumberOfItems(prevState => prevState.filter(item => item !== lastItem(prevState)))
-                    setExcludeItemsPrices(prevState => prevState.filter(item => item !== lastItem(prevState)))
-                }
+                const list = [...excludeItems]
+                list.splice(idx, 1)
+                setExcludeItems(list)
                 return
         }
     }
     const excludeItemChangeHandler = (e, idx) => {
-        setExcludeItemsPrices(prevState => {
-            prevState[idx] = e.target.value
-            return prevState
-        })
+        const list = [...excludeItems]
+        list[idx] = e.target.value
+        setExcludeItems(list)
     }
     /**********************************/
 
@@ -56,8 +53,11 @@ function App() {
     const [result, setResult] = useState(null)
     const calculateResult = () => {
         // if (subtotal === '' || totalPeople === '') return
-
-        const sumOfExcludeItems = excludeItemsPrices.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
+        // if exclude item prices are '', then treat it as 0
+        const sumOfExcludeItems = excludeItems.reduce(
+            (a, b) => (a === '' ? parseFloat(b) : b === '' ? parseFloat(a) : parseFloat(a) + parseFloat(b)),
+            0
+        )
 
         const finalTip = tipUnit === '$' || tip <= 0 ? tip : subtotal * (1 + tax / 100) * (1 + tip / 100) - subtotal
 
@@ -116,9 +116,8 @@ function App() {
                 </Grid>
                 <Grid variant='exclude-items'>
                     <ExcludeItems
-                        excludeItemsPrices={excludeItemsPrices}
+                        excludeItems={excludeItems}
                         itemPriceChangeHandler={excludeItemChangeHandler}
-                        numberOfItems={numberOfItems}
                         addRemoveBtnHandler={excludeItemsBtnHandler}
                     />
                 </Grid>
